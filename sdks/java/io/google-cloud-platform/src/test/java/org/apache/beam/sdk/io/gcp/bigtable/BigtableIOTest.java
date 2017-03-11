@@ -699,18 +699,11 @@ public class BigtableIOTest {
         BigtableIO.read().withBigtableOptions(optionsBuilder.build());
 
     BigtableOptions options = read.getBigtableOptions();
-    assertEquals(RetryOptions.DEFAULT_STREAMING_BATCH_SIZE,
-        options.getRetryOptions().getStreamingBatchSize());
     assertEquals(initialBackoffMillis, options.getRetryOptions().getInitialBackoffMillis());
-
-    assertThat(options.getRetryOptions(),
-        Matchers.equalTo(retryOptionsBuilder
-            .setStreamingBatchSize(RetryOptions.DEFAULT_STREAMING_BATCH_SIZE)
-            .build()));
   }
 
   @Test
-  public void testWriteWithBigTableOptionsSetsBulkOptionsAndRetryOptions() {
+  public void testWriteWithBigTableOptionsSetsBulkOptions() {
     final int maxInflightRpcs = 1;
     final int initialBackoffMillis = -1;
 
@@ -731,17 +724,11 @@ public class BigtableIOTest {
     BigtableOptions options = write.getBigtableOptions();
     assertEquals(true, options.getBulkOptions().useBulkApi());
     assertEquals(maxInflightRpcs, options.getBulkOptions().getMaxInflightRpcs());
-    assertEquals(RetryOptions.DEFAULT_STREAMING_BATCH_SIZE,
-        options.getRetryOptions().getStreamingBatchSize());
     assertEquals(initialBackoffMillis, options.getRetryOptions().getInitialBackoffMillis());
 
     assertThat(options.getBulkOptions(),
         Matchers.equalTo(bulkOptionsBuilder
             .setUseBulkApi(true)
-            .build()));
-    assertThat(options.getRetryOptions(),
-        Matchers.equalTo(retryOptionsBuilder
-            .setStreamingBatchSize(RetryOptions.DEFAULT_STREAMING_BATCH_SIZE)
             .build()));
   }
 

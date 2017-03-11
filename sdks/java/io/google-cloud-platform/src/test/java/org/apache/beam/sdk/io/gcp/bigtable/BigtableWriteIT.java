@@ -32,7 +32,6 @@ import com.google.bigtable.v2.RowSet;
 import com.google.cloud.bigtable.config.BigtableOptions;
 import com.google.cloud.bigtable.config.BigtableOptions.Builder;
 import com.google.cloud.bigtable.config.CredentialOptions;
-import com.google.cloud.bigtable.config.RetryOptions;
 import com.google.cloud.bigtable.grpc.BigtableSession;
 import com.google.cloud.bigtable.grpc.BigtableTableAdminClient;
 import com.google.cloud.bigtable.grpc.scanner.ResultScanner;
@@ -81,17 +80,11 @@ public class BigtableWriteIT implements Serializable {
     PipelineOptionsFactory.register(BigtableTestOptions.class);
     options = TestPipeline.testingPipelineOptions().as(BigtableTestOptions.class);
 
-    // RetryOptions streamingBatchSize must be explicitly set for getTableData()
-    RetryOptions.Builder retryOptionsBuilder = new RetryOptions.Builder();
-    retryOptionsBuilder.setStreamingBatchSize(
-        retryOptionsBuilder.build().getStreamingBufferSize() / 2);
-
     bigtableOptions =
         new Builder()
             .setProjectId(options.getProjectId())
             .setInstanceId(options.getInstanceId())
             .setUserAgent("apache-beam-test")
-            .setRetryOptions(retryOptionsBuilder.build())
             .build();
 
     session =
